@@ -1,34 +1,36 @@
---O comando Select serve pra visualiza o conteudo de uma tabela
+/*<header>
+<entity> TypesTower </entity>
+<project> (FTR90U78) </project>
+<developerid> Leandropaz (201br) </developerid>
+</header>*/
+
 select * from TypesTower;
 
--- comando insert server para inserir dados numa tabela
-insert into TypesTower(
-IdentificationTypeTower,
+
+insert into TypesTower
+(
 DescriptionTypeTower,   
 ActiveTypeTower 
 )
-values(1,'Power Line',1);
+values('Power Line',1);
 
 insert into TypesTower(
-IdentificationTypeTower,
 DescriptionTypeTower,   
 ActiveTypeTower 
 )
-values(2,'Telefone Line',1);
+values('Telefone Line',1);
 
 insert into TypesTower(
-IdentificationTypeTower,
 DescriptionTypeTower,   
 ActiveTypeTower 
 )
-values(3,'Television',1);
+values('Television',1);
 
 insert into TypesTower(
-IdentificationTypeTower,
 DescriptionTypeTower,   
 ActiveTypeTower 
 )
-values(4,'Satellite',1);
+values('Satellite',1);
 
 
 

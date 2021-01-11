@@ -1,7 +1,11 @@
---O comando Select serve pra visualiza o conteudo de uma tabela
+/*<header>
+<entity> USStates </entity>
+<project> (FTR90U78) </project>
+<developerid> Leandropaz (201br) </developerid>
+</header>*/
+
 select * from USStates;
 
--- comando insert server para inserir dados numa tabela
 insert into USStates
 (
 SiglaState,
