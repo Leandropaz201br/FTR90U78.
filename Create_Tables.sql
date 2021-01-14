@@ -4,23 +4,8 @@
 <developerid> Leandropaz (201br) </developerid>
 </header>*/
 
-
-/*select 
-t.IdentificationTower,
-t.AliasTower,
-t.HeightTower,
-U.DescriptionUnity,
-t.StateTower,US.NameState,
-t.GaugeTower,TG.DescriptionGauge
-from towers as t join Unity as U on t.HeightUnitTower=U.IdentificationUnity
-join USStates as US on t.StateTower = US.SiglaState
-join TypesGauge as TG on t.GaugeUnitTower = TG.IdentificationGauge;*/
-
-
-select * from towers; 
 create table towers
 ( 
-
 IdentificationTower numeric identity (1,1) primary key,
 AliasTower nvarchar(50),
 LatitudePositionTower nvarchar(50),
@@ -54,6 +39,26 @@ ActiveUnity bit
 );
 create table USStates
 (
-SiglaState nvarchar(2) PRIMARY KEY,
+SiglaState varchar(2) PRIMARY KEY,
 NameState nvarchar(30)
 );
+Alter table towers
+add constraint FK_towers_X_TypesTower Foreign Key (TypeTower) references TypesTower (IdentificationTypeTower
+);
+Alter table towers
+add constraint FK_towers_X_TypesGuage Foreign Key (GaugeUnitTower) references TypesGauge (IndentificationGauge
+);
+Alter table towers
+add constraint FK_towers_X_Unity Foreign Key (HeightUnitTower) references Unity (IdentificationUnity
+);
+Alter table towers
+add constraint FK_towers_X_USStates Foreign Key (StateTower) references USStates (SiglaState
+);
+
+/*Alter Table -- Nome da tabela que possui a chave estrangeira
+add constraint -- coloque o nome da chave  que voce deseja 
+Foreign Key (--Chave estrangeira )
+references -- nome da tabela onde consta a chave primaria 
+(
+-- coloca o nome do campo da chave estrangeira
+)*/
