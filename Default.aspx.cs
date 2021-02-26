@@ -21,6 +21,7 @@ namespace registertowers
       
         protected void Page_Load(object sender, EventArgs e)
         {
+           
             TBAliasTower.Enabled = true;
             TBLatitudePositionTower.Enabled = true;
             TBLongitudePositionTower.Enabled = true;
@@ -33,10 +34,10 @@ namespace registertowers
 
             TBRegistrationDateTower.Text = Convert.ToString(StrToday);
             TBStatusTower.Enabled = true;
+            BTUpdate.Enabled = false;
 
-
-           //1o. Cria a conexao com banco e denominado uma varivael de nome = con;
-           //Basta somente um conexão.
+            //1o. Cria a conexao com banco e denominado uma varivael de nome = con;
+            //Basta somente um conexão.
             SqlConnection con = new SqlConnection(connectionString);
            
             //2º Cria uma variavel string com a instrução SQL que vai buscar no banco as informações.
@@ -147,20 +148,131 @@ namespace registertowers
 
         protected void BTSave_Click(object sender, EventArgs e)
         {
+            
 
-            string Sql = "exec InsertTowers " +
+                string Sql = "exec InsertTowers " +
                "'" + TBAliasTower.Text + "'" +
                ",'" + TBLatitudePositionTower.Text + "'" +
                ",'" + TBLongitudePositionTower.Text + "'" +
                "," + TBHeightTower.Text +
-               "," + DPLHeightUnitTower.SelectedValue + 
-               "," + TBGaugeTower.Text  +
+               "," + DPLHeightUnitTower.SelectedValue +
+               "," + TBGaugeTower.Text +
                "," + DPLGaugeUnitTower.SelectedValue +
-               "," + DPLTypeTower.SelectedValue + 
-               ",'" + DPLStateTower.SelectedValue + "'" + 
-               ",'" + TBStatusTower.Text +"'";
+               "," + DPLTypeTower.SelectedValue +
+               ",'" + DPLStateTower.SelectedValue + "'" +
+               ",'" + TBStatusTower.Text + "'";
 
+
+               SqlConnection con = new SqlConnection(connectionString);
+                SqlCommand cmd = new SqlCommand(Sql, con);
+                cmd.CommandType = CommandType.Text;
+                con.Open();
+                try
+                {
+                    int i = cmd.ExecuteNonQuery();
+                    if (i > 0)
+                        LBPosts.Text = "Registration successful!";
+                }
+                catch (Exception ex)
+                {
+                    LBPosts.Text = "Erro: " + ex.ToString();
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
             
+
+
+        protected void BTClean_Click(object sender, EventArgs e)
+        {
+            LBPosts.Text = "";
+            TBIDTower.Text = "";
+            TBAliasTower.Text = "";
+            TBLatitudePositionTower.Text = "";
+            TBLongitudePositionTower.Text = "";
+            TBHeightTower.Text = "";
+            TBGaugeTower.Text = "";
+            TBRegistrationDateTower.Text = "";
+            TBStatusTower.Text = "";
+            string StrToday = string.Empty;
+            StrToday = DateTime.Now.Date.ToString("yyyy-MM-dd");
+
+            TBRegistrationDateTower.Text = Convert.ToString(StrToday);
+            
+        }
+
+        protected void BTIDTower_Click(object sender, EventArgs e)
+        {
+          
+            string Sql = "exec SearchTower @idTower =  " + TBIDTower.Text;
+            SqlConnection con = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand(Sql, con);
+            cmd.CommandType = CommandType.Text;
+            SqlDataReader SearchTower;
+            con.Open();
+            if (TBIDTower.Text != "")
+            {
+                try
+                {
+                    SearchTower = cmd.ExecuteReader();
+                    if (SearchTower.Read())
+                    {
+                        TBAliasTower.Enabled = true;
+                        TBLatitudePositionTower.Enabled = true;
+                        TBLongitudePositionTower.Enabled = true;
+                        TBHeightTower.Enabled = true;
+                        TBGaugeTower.Enabled = true;
+                        TBRegistrationDateTower.Enabled = false;
+                        string StrToday = string.Empty;
+                        TBAliasTower.Text = SearchTower[1].ToString();
+                        DPLTypeTower.SelectedValue = SearchTower[2].ToString();
+                        TBHeightTower.Text = SearchTower[3].ToString();
+                        DPLHeightUnitTower.SelectedValue = SearchTower[4].ToString();
+                        TBGaugeTower.Text = SearchTower[5].ToString();
+                        DPLGaugeUnitTower.SelectedValue = SearchTower[6].ToString();
+                        TBLatitudePositionTower.Text = SearchTower[7].ToString();
+                        TBLongitudePositionTower.Text = SearchTower[8].ToString();
+                        TBRegistrationDateTower.Text = SearchTower[9].ToString();
+                        DPLStateTower.SelectedValue = SearchTower[10].ToString();
+                        TBStatusTower.Text = SearchTower[11].ToString();
+                        BTUpdate.Enabled = true;
+                    }
+                    else
+                    {
+                        LBPosts.Text = "we not find thia tower";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LBPosts.Text = "Erro: " + ex.ToString();
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+           
+        }
+
+        protected void BTUpdate_Click(object sender, EventArgs e)
+        {
+            
+            string Sql = "exec UpdateTower " +
+                      TBIDTower.Text + "," +
+                "'" + TBAliasTower.Text + "'" +
+                ",'" + TBLatitudePositionTower.Text + "'" +
+                ",'" + TBLongitudePositionTower.Text + "'" +
+                "," + TBHeightTower.Text +
+                "," + DPLHeightUnitTower.SelectedValue +
+                "," + TBGaugeTower.Text +
+                "," + DPLGaugeUnitTower.SelectedValue +
+                "," + DPLTypeTower.SelectedValue +
+                ",'" + DPLStateTower.SelectedValue + "'" +
+                ",'" + TBStatusTower.Text + "'";
+
+
             SqlConnection con = new SqlConnection(connectionString);
             SqlCommand cmd = new SqlCommand(Sql, con);
             cmd.CommandType = CommandType.Text;
@@ -169,29 +281,26 @@ namespace registertowers
             {
                 int i = cmd.ExecuteNonQuery();
                 if (i > 0)
-                    LBPosts.Text = "Registration successful!";
+                    LBPosts.Text = "UpdateTowers successful!";
             }
             catch (Exception ex)
             {
-               LBPosts.Text = "Erro: " + ex.ToString();
+                LBPosts.Text = "Erro: " + ex.ToString();
             }
             finally
             {
                 con.Close();
             }
-          
+        
 
-        }
+            TBAliasTower.Enabled = true;
+            TBLatitudePositionTower.Enabled = true;
+            TBLongitudePositionTower.Enabled = true;
+            TBHeightTower.Enabled = true;
+            TBGaugeTower.Enabled = true;
+            TBRegistrationDateTower.Enabled = false;
+            string StrToday = string.Empty;
 
-        protected void BTClean_Click(object sender, EventArgs e)
-        {
-            TBAliasTower.Text = "";
-            TBLatitudePositionTower.Text = "";
-            TBLongitudePositionTower.Text = "";
-            TBHeightTower.Text = "";
-            TBGaugeTower.Text = "";
-            TBRegistrationDateTower.Text = "";
-            TBStatusTower.Text = "";
-        }
     }
-}
+    }
+    }
